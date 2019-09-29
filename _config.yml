@@ -57,7 +57,7 @@ footer-text: © Jacob
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
-disqus: noh-jacob.disqus.com
+disqus: noh-jacob
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
 google_analytics: UA-131796062-2
