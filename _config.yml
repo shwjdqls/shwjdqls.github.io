@@ -3,10 +3,10 @@
 #
 
 # Name of your site (displayed in the header)
-name: Jacob's 기술 블로그
+name: Jacob's IT Blog
 
 # Short bio or description (displayed in the header)
-description: 스타트업 개발자의 개발 노트
+description: Useful notes for devlelopers
 
 #
 # Flags below are optional
@@ -38,33 +38,33 @@ paginate: 5
 footer-links:
   behance: # https://www.behance.net/<username>
   dribbble:
-  email:
-  facebook:
+  email: shwjdqls@gmail.com
+  facebook: jeongbin.noh
   flickr:
-  github: AWEEKJ/kiko-now
+  github: noh-jacob
   googleplus: # anything in your profile username that comes after plus.google.com/
-  instagram:
+  instagram: shwjdqls
   linkedin:
   pinterest:
-  rss: # just type anything here for a working RSS icon
+  rss: true
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   tumblr: # https://<username>.tumblr.com
   twitter: jekyllrb
   youtube: # channel/<your_long_string> or user/<user-name>
 
 # Text under the icons in footer
-footer-text: © 2017 Kiko Now
+footer-text: © Jacob
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
-disqus: # <username>.disqus.com
+disqus: noh-jacob.disqus.com
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-google_analytics:
+google_analytics: UA-131796062-2
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url:
+url: https://noh-jacob.github.io/
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
