@@ -2,7 +2,7 @@
 layout: post
 title: "[안드로이드] 전체 화면(Fullscreen) 화면 설정 완벽 정리 - 상태 바, 내비게이션 바 제거"
 category: Android
-tags: [풀스크린]
+tags: [안드로이드, 전체 화면, 풀스크린, 상태 바, 내비게이션 바]
 comments: true
 ---
 
