@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[안드로이드] 풀스크린(Fullscreen) 화면 설정 완벽 정리 - Lean back, Immersive, Sticky immersive"
+title: "[안드로이드] 풀스크린(Fullscreen) 화면 설정 - Lean back, Immersive, Sticky immersive"
 category: Android
 tags: [Android, Fullscreen, Lean back, Immersive, Sticky immersive, Status bar, Navigation bar]
 comments: true
@@ -24,15 +24,9 @@ Immersive는 사용자가 화면과 많이 상호 작용하는 환경을 위한 
 
 Sticky Immersive는 Immersive와 비슷하지만 Immersive는 가장자리에서 스와이프를 할 때 앱이 제스처를 인식하지 못하지만, Sticky Immersive는 제스처를 인식할 수 있다. 따라서 게임처럼 스와이프를 많이 필요로 하는 앱에서 주로 사용된다.
 
-<br />
-
-풀스크린 적용 시 앱의 특성에 맞추어 위의 옵션을 설정하면 된다. 옵션 별로 풀스크린을 구현해보자. 풀스크린을 적용하지 않은 화면은 아래와 같다.
-
-![일반 화면]({{ site.baseurl }}/images/android/fullscreen/normal.png){: width="50%" height="50%"}{: .center-image}*풀스크린 적용 전*
+풀스크린 적용 시 앱의 특성에 맞추어 위의 옵션을 설정하면 된다. 옵션 별로 풀스크린을 구현해보자. 
 
 <br />
-
-풀스크린을 적용하기 위해서 먼저 액티비티의 onWindowFocusChanged() 메서드를 구현한다. 이 메서드는 액티비티의 포커스가 변경될 때 실행되는 함수로 hasFocus가 true이면 onCreate(), onResume()이 실행된 경우로 보면 된다.
 
 ```kotlin
 override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -41,16 +35,18 @@ override fun onWindowFocusChanged(hasFocus: Boolean) {
 }
 ```
 
-<br />
+풀스크린을 적용하기 위해서 먼저 액티비티의 onWindowFocusChanged() 메서드를 구현한다. 이 메서드는 액티비티의 포커스가 변경될 때 실행되는 함수로 hasFocus가 true이면 onCreate(), onStart(), onResume() 등이 실행된 경우로 보면 된다.
 
-액티비티가 포커스를 가지는 경우 실행하는 메서드를 구현한다. 아래 코드는 Lean back 옵션으로 실행되며 Immersive나 Sticky immersive 옵션을 적용하려면 한 줄을 추가하면 된다.
+<br />
 
 ```kotlin
 private fun setFullscreen() {
     window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+            // 하단 내비게이션 바 숨기기
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            // 상단 상태 바 숨기기
             View.SYSTEM_UI_FLAG_FULLSCREEN
 
             // Immersive 옵션을 적용하려면 아래 플래그를 추가한다.
@@ -61,37 +57,29 @@ private fun setFullscreen() {
 }
 ```
 
-위의 코드를 적용하면 아래와 같이 풀스크린이 적용된다. 상단의 상태 바와 하단의 내비게이션 바가 사라진 것을 볼 수 있다.
+다음으로 액티비티가 포커스를 가지는 경우에 풀스크린을 설정하는 메서드를 구현한다. 기본으로 Lean back 옵션이 적용되며, Immersive나 Sticky immersive 옵션을 적용하려면 한 줄을 추가하면 된다.
+
+<br />
+
+이제 풀스크린을 위한 설정이 완료되었다! 적용 전과 적용 후의 화면을 비교해보자.
+
+![일반 화면]({{ site.baseurl }}/images/android/fullscreen/normal.png){: width="50%" height="50%"}{: .center-image}*풀스크린 적용 전*
 
 ![풀스크린]({{ site.baseurl }}/images/android/fullscreen/fullscreen.png){: width="50%" height="50%"}{: .center-image}*풀스크린 적용 후*
 
-<br />
-
-상황에 따라 상태 바나 내비게이션 바를 숨기지 않을 수도 있는데 이에 해당하는 코드는 다음과 같다.
-
-```
-            // 하단 내비게이션 바 숨기기
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-
-            // 상단 상태 바 숨기기
-            View.SYSTEM_UI_FLAG_FULLSCREEN
-```
+비교해보면 상단의 상태 바와 하단의 내비게이션 바가 사라진 것을 볼 수 있다.
 
 <br />
 
-상태 바를 숨기고 싶지 않다면 View.SYSTEM_UI_FLAG_FULLSCREEN 플래그를 제거한다.
+상황에 따라 상태 바나 내비게이션 바를 숨기고 싶지 않을 수도 있다. 해당하는 부분의 플래그를 제거하면 확인이 가능하다. 상단 상태바는 View.SYSTEM_UI_FLAG_FULLSCREEN, 하단 내비게이션 바는 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION이다.
+            
+![상태 바 이미지]({{ site.baseurl }}/images/android/fullscreen/status_bar.png){: width="50%" height="50%"}{: .center-image}*상단 상태바*
 
-![상태 바 이미지]({{ site.baseurl }}/images/android/fullscreen/status_bar.png){: width="50%" height="50%"}{: .center-image}*View.SYSTEM_UI_FLAG_FULLSCREEN 미적용*
-
-<br />
-
-내비게이션 바를 숨기고 싶지 않다면 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION 플래그를 제거한다.
-
-![내비게이션 바 이미지]({{ site.baseurl }}/images/android/fullscreen/navigation_bar.png){: width="50%" height="50%"}{: .center-image}*View.SYSTEM_UI_FLAG_HIDE_NAVIGATION 미적용*
+![내비게이션 바 이미지]({{ site.baseurl }}/images/android/fullscreen/navigation_bar.png){: width="50%" height="50%"}{: .center-image}*하단 내비게이션 바*
 
 <br />
 
-보통 BaseActivity에 풀스크린을 구현하고 적용할 액티비티에서 이를 상속받아 사용한다. 먼저 BaseActivity를 구현해보자.
+일반적으로 풀스크린을 사용하기 위해 BaseActivity에 풀스크린을 구현하고 적용할 액티비티에서 이를 상속받아 사용한다. BaseActivity를 구현해보자.
 
 ```kotlin
 package com.jacob.fullscreen
@@ -123,6 +111,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
 @CallSuper는 하위 클래스에서 해당 메서드를 오버라이드할 시 반드시 상위 클래스의 메서드를 호출하라는 의미이다. 이제 풀스크린을 적용할 MainActivity를 구현한다.
 
+<br />
+
 ```kotlin
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,10 +126,10 @@ class MainActivity : BaseActivity() {
 }
 ```
 
+위의 방법으로 원하는 액티비티에 쉽게 풀스크린을 적용할 수 있다.
+
 <br />
 
-위의 방법으로 쉽게 원하는 액티비티에 풀스크린을 적용할 수 있다.
-
-앱에 따라 풀스크린을 적용할 수도 있고, 단순히 상태 바나 내비게이션 바만 숨길 수 있다. 풀스크린을 적용한다면 앱의 특성에 맞게 적절한 풀스크린 옵션을 선택하여 개발하자.
+앱에 따라 풀스크린을 적용할 수도 있고, 단순히 상태 바나 내비게이션 바만 숨길 수 있다. 풀스크린을 적용한다면 앱의 특성에 맞게 적절한 풀스크린 옵션을 사용하자.
 
 <br />

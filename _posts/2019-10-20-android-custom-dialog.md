@@ -6,190 +6,28 @@ tags: [Android, Dialog, Custom, AlertDialog]
 comments: true
 ---
 
-다이얼로그(Dialog)는 사용자에게 추가 정보의 입력이나 내용 확인을 위한 작은 창으로, 사용자가 계속 진행하기 위해 필요한 조치를 한다. [공식 문서](https://developer.android.com/guide/topics/ui/dialogs?hl=ko)에서는 Dialog를 직접 인스턴스화 하지 않고 AlertDialog를 사용하도록 권장하고 있다.
+다이얼로그(Dialog)는 사용자에게 추가 정보의 입력이나 내용 확인을 위한 작은 창으로, 사용자가 계속 진행하기 위해 필요한 입력을 받는다. [공식 문서](https://developer.android.com/guide/topics/ui/dialogs?hl=ko)에서는 Dialog를 직접 인스턴스화 하지 않고 AlertDialog를 사용하도록 권장하고 있다.
 
-AlertDialog는 빌더 패턴을 사용하여 다음과 같이 구현한다.
+<br />
 
-(AlertDialog 사용 코드)
-
-그러면 이렇게 나온다.
-
-(AiertDialog 이미지)
-
-그런데 다이얼로그를 커스텀해서 디자인을 자유롭게 적용하고 싶다.
-
-다이얼로그를 커스터마이징 해보자
-
-(CustomDialog 구현 코드)
-
-기존의 다이얼로그와 비슷하게 사용할 수 있도록 위와 같이 구현한다.
-
-(CustomDialog.xml)
-
-예시로 뷰는 이렇게 만들어 보았다.
-
-(CustomDialog 사용 코드)
-
-사용할 때는 이렇게 사용한다.
-
-(CustomDialog 이미지)
-
-
-
+AlertDialog는 빌더 패턴을 이용하면 간단하게 구현할 수 있다.
 
 ```kotlin
-package com.jacob.customdialog
-
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-
-class MainActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        alertDialogButton.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("제목")
-                .setMessage("내용")
-                .setPositiveButton("예") { _, _ ->
-                    Toast.makeText(this, "예", Toast.LENGTH_SHORT).show()
-                }.setNegativeButton("아니오") { _, _ ->
-                    Toast.makeText(this, "아니오", Toast.LENGTH_SHORT).show()
-                }.show()
-        }
-
-        customDialogButton.setOnClickListener {
-            CustomDialog(this)
-                .setTitle("제목")
-                .setMessage("내용")
-                .setPositiveButton("예") {
-                    Toast.makeText(this, "예", Toast.LENGTH_SHORT).show()
-                }.setNegativeButton("아니오") {
-                    Toast.makeText(this, "아니오", Toast.LENGTH_SHORT).show()
-                }.show()
-        }
-    }
-}
+AlertDialog.Builder(this)
+    .setTitle("제목")
+    .setMessage("내용")
+    .setPositiveButton("예") { _, _ ->
+        Toast.makeText(this, "예", Toast.LENGTH_SHORT).show()
+    }.setNegativeButton("아니오") { _, _ ->
+        Toast.makeText(this, "아니오", Toast.LENGTH_SHORT).show()
+    }.show()
 ```
 
-```kotlin
-package com.jacob.customdialog
+![Alert dialog]({{ site.baseurl }}/images/android/custom_dialog/alert_dialog.png){: width="50%" height="50%"}{: .center-image}*Alert Dialog*
 
-import android.content.Context
-import android.os.Handler
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.view_dialog.view.*
+하지만 우리는 이런 칙칙한(?) 디자인의 다이얼로그를 사용하고 싶지 않다. 다이얼로그를 자유롭게 커스터마이징하려면 어떻게 해야 할까? 커스터마이징 하는 방법은 여러 가지가 있을 수 있지만, 기존의 AlertDialog와 비슷하게 빌더 패턴을 사용하여 구현해보자.
 
-class CustomDialog(private val context: Context) {
-
-    private val builder: AlertDialog.Builder by lazy {
-        AlertDialog.Builder(context).setView(view)
-    }
-    private val view: View by lazy {
-        View.inflate(context, R.layout.view_dialog, null)
-    }
-
-    private var dialog: AlertDialog? = null
-
-    private val onTouchListener = View.OnTouchListener { _, motionEvent ->
-        if (motionEvent.action == MotionEvent.ACTION_UP) {
-            Handler().postDelayed({
-                dismiss()
-            }, 5)
-        }
-        false
-    }
-
-    fun setTitle(@StringRes titleId: Int): CustomDialog {
-        view.titleTextView.text = context.getText(titleId)
-        return this
-    }
-
-    fun setTitle(title: CharSequence): CustomDialog {
-        view.titleTextView.text = title
-        return this
-    }
-
-    fun setMessage(@StringRes messageId: Int): CustomDialog {
-        view.messageTextView.text = context.getText(messageId)
-        return this
-    }
-
-    fun setMessage(message: CharSequence): CustomDialog {
-        view.messageTextView.text = message
-        return this
-    }
-
-    fun setPositiveButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
-        view.positiveButton.apply {
-            text = context.getText(textId)
-            setOnClickListener(listener)
-            setOnTouchListener(onTouchListener)
-        }
-        return this
-    }
-
-    fun setPositiveButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
-        view.positiveButton.apply {
-            this.text = text
-            setOnClickListener(listener)
-            setOnTouchListener(onTouchListener)
-        }
-        return this
-    }
-
-    fun setNegativeButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
-        view.negativeButton.apply {
-            text = context.getText(textId)
-            this.text = text
-            setOnClickListener(listener)
-            setOnTouchListener(onTouchListener)
-        }
-        return this
-    }
-
-    fun setNegativeButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
-        view.negativeButton.apply {
-            this.text = text
-            setOnClickListener(listener)
-            setOnTouchListener(onTouchListener)
-        }
-        return this
-    }
-
-    fun create() {
-        dialog = builder.create()
-    }
-
-    fun show() {
-        dialog = builder.create()
-        dialog?.window?.let {
-            it.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
-            it.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-            it.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            dialog?.show()
-            it.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
-        } ?: dialog?.show()
-    }
-
-    fun dismiss() {
-        dialog?.dismiss()
-    }
-}
-
-```
-
+<br />
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -255,12 +93,224 @@ class CustomDialog(private val context: Context) {
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![메인 화면]({{ site.baseurl }}/images/android/custom_dialog/main.png){: width="50%" height="50%"}{: .center-image}*메인 화면*
+먼저 커스터마이징할 다이얼로그의 레이아웃을 작성한다.
+필자는 제목, 내용, 버튼 두개를 넣었는데, 다이얼로그 구성은 필요한대로 넣으면 된다.
 
-![Alert dialog]({{ site.baseurl }}/images/android/custom_dialog/alert_dialog.png){: width="50%" height="50%"}{: .center-image}*메인 화면*
+<br />
 
-![Click Ok in alert dialog]({{ site.baseurl }}/images/android/custom_dialog/alert_dialog_ok.png){: width="50%" height="50%"}{: .center-image}*메인 화면*
+```kotlin
+class CustomDialog(private val context: Context) {
 
-![Custom dialog]({{ site.baseurl }}/images/android/custom_dialog/custom_dialog.png){: width="50%" height="50%"}{: .center-image}*메인 화면*
+    private val builder: AlertDialog.Builder by lazy {
+        AlertDialog.Builder(context).setView(view)
+    }
 
-![Click ok in custom dialog]({{ site.baseurl }}/images/android/custom_dialog/custom_dialog_ok.png){: width="50%" height="50%"}{: .center-image}*메인 화면*
+    private val view: View by lazy {
+        View.inflate(context, R.layout.view_dialog, null)
+    }
+
+    private var dialog: AlertDialog? = null
+
+    fun setTitle(@StringRes titleId: Int): CustomDialog {
+        view.titleTextView.text = context.getText(titleId)
+        return this
+    }
+
+    fun setTitle(title: CharSequence): CustomDialog {
+        view.titleTextView.text = title
+        return this
+    }
+
+    fun setMessage(@StringRes messageId: Int): CustomDialog {
+        view.messageTextView.text = context.getText(messageId)
+        return this
+    }
+
+    fun setMessage(message: CharSequence): CustomDialog {
+        view.messageTextView.text = message
+        return this
+    }
+
+    fun setPositiveButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
+        view.positiveButton.apply {
+            text = context.getText(textId)
+            setOnClickListener(listener)
+        }
+        return this
+    }
+
+    fun setPositiveButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
+        view.positiveButton.apply {
+            this.text = text
+            setOnClickListener(listener)
+        }
+        return this
+    }
+
+    fun setNegativeButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
+        view.negativeButton.apply {
+            text = context.getText(textId)
+            this.text = text
+            setOnClickListener(listener)
+        }
+        return this
+    }
+
+    fun setNegativeButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
+        view.negativeButton.apply {
+            this.text = text
+            setOnClickListener(listener)
+        }
+        return this
+    }
+
+    fun create() {
+        dialog = builder.create()
+    }
+
+    fun show() {
+        dialog = builder.create()
+        dialog?.show()
+    }
+
+    fun dismiss() {
+        dialog?.dismiss()
+    }
+}
+```
+
+CustomDialog 클래스를 작성한다. AlertDialog의 빌더를 그대로 사용한다. 핵심은 빌더 패턴을 이용하기 위해 다이얼로그를 설정하기 위한 메서드들이 CustomDialog를 반환하도록 것이다.
+
+<br />
+
+```kotlin
+CustomDialog(this)
+    .setTitle("제목")
+    .setMessage("내용")
+    .setPositiveButton("예") {
+        Toast.makeText(this, "예", Toast.LENGTH_SHORT).show()
+    }.setNegativeButton("아니오") {
+        Toast.makeText(this, "아니오", Toast.LENGTH_SHORT).show()
+    }.show()
+```
+
+만든 다이얼로그를 띄어보자. AlertDialog 코드와 매우 유사하다.
+
+<br />
+
+![Custom dialog]({{ site.baseurl }}/images/android/custom_dialog/custom_dialog.png){: width="50%" height="50%"}{: .center-image}*Custom Dialog*
+
+커스터마이징한 다이얼로그가 실행된다!
+
+<br />
+
+이렇게 다이얼로그를 커스터마이징하여 사용하다보면 한 가지 불편한 점을 발견할 수 있는데, AlertDialog는 버튼을 누르면 다이얼로그가 종료되지만, 커스텀 다이얼로그는 버튼을 눌러도 다이얼로그가 종료되지 않는다. 그래서 매번 클릭 리스너에 다이얼로그를 종료하는 번거로운 절차를 해야 한다. OnTouchListener를 통해 이를 해결해보자.
+
+<br />
+
+```kotlin
+class CustomDialog(private val context: Context) {
+
+    private val builder: AlertDialog.Builder by lazy {
+        AlertDialog.Builder(context).setView(view)
+    }
+
+    private val view: View by lazy {
+        View.inflate(context, R.layout.view_dialog, null)
+    }
+
+    private var dialog: AlertDialog? = null
+
+    // 터치 리스너 구현
+    private val onTouchListener = View.OnTouchListener { _, motionEvent ->
+        if (motionEvent.action == MotionEvent.ACTION_UP) {
+            Handler().postDelayed({
+                dismiss()
+            }, 5)
+        }
+        false
+    }
+
+    fun setTitle(@StringRes titleId: Int): CustomDialog {
+        view.titleTextView.text = context.getText(titleId)
+        return this
+    }
+
+    fun setTitle(title: CharSequence): CustomDialog {
+        view.titleTextView.text = title
+        return this
+    }
+
+    fun setMessage(@StringRes messageId: Int): CustomDialog {
+        view.messageTextView.text = context.getText(messageId)
+        return this
+    }
+
+    fun setMessage(message: CharSequence): CustomDialog {
+        view.messageTextView.text = message
+        return this
+    }
+
+    fun setPositiveButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
+        view.positiveButton.apply {
+            text = context.getText(textId)
+            setOnClickListener(listener)
+            // 터치 리스너 등록
+            setOnTouchListener(onTouchListener)
+        }
+        return this
+    }
+
+    fun setPositiveButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
+        view.positiveButton.apply {
+            this.text = text
+            setOnClickListener(listener)
+            // 터치 리스너 등록
+            setOnTouchListener(onTouchListener)
+        }
+        return this
+    }
+
+    fun setNegativeButton(@StringRes textId: Int, listener: (view: View) -> (Unit)): CustomDialog {
+        view.negativeButton.apply {
+            text = context.getText(textId)
+            this.text = text
+            setOnClickListener(listener)
+            // 터치 리스너 등록
+            setOnTouchListener(onTouchListener)
+        }
+        return this
+    }
+
+    fun setNegativeButton(text: CharSequence, listener: (view: View) -> (Unit)): CustomDialog {
+        view.negativeButton.apply {
+            this.text = text
+            setOnClickListener(listener)
+            // 터치 리스너 등록
+            setOnTouchListener(onTouchListener)
+        }
+        return this
+    }
+
+    fun create() {
+        dialog = builder.create()
+    }
+
+    fun show() {
+        dialog = builder.create()
+        dialog?.show()
+    }
+
+    fun dismiss() {
+        dialog?.dismiss()
+    }
+}
+```
+
+OnTouchListener에서 ACTION_UP은 OnClickListener와 동일한데 이를 이용한 꼼수이다. 여기에 0.005초 후에 다이얼로그를 종료하는 코드를 넣으면 클릭 이벤트가 실행되고 다이얼로그가 종료된다.
+
+<br />
+
+커스텀 다이얼로그를 구현하기 위해 반드시 빌더 패턴을 이용할 필요는 없지만, 빌더 패턴을 이용할 경우 그때그때 필요한 기능만을 사용할 수 있다. AlertDialog와 같이 우선 안드로이드에서 제공하는 형태를 따르고, 후에 앱의 특성에 맞게 수정하는 것이 올바른 방향이라고 생각한다.
+
+<br />
