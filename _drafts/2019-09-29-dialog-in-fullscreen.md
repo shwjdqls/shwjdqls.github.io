@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "[Android] 풀스크린으로 다이얼로그 띄우기"
+category: Android
 tags: [다이얼로그, 풀스크린]
 comments: true
 ---

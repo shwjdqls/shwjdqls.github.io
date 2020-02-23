@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "[Android] Retrofit 사용법 및 Json 파싱하기"
+category: Android
 tags: [Android, Retrofit, Json]
 comments: true
 ---
@@ -14,7 +15,10 @@ Retrofit은 REST API로, 서버와 클라이언트간 Http 통신을 위한 인�
 
 자세한 내용은 [공식 문서](http://square.github.io/retrofit)를 참고하면 된다.
 
+<br />
+
 ## gradle 설정
+
 ```
 dependencies {
     ...
@@ -28,6 +32,8 @@ dependencies {
 
 app gradle에 retrofit을 추가한다. json 형식으로 응답하는 경우 gson도 같이 추가한다. 다른 형식이라면 그에 맞는 parser를 사용해야 한다.
 
+<br />
+
 ## 권한 설정
 
 ```xml
@@ -39,6 +45,8 @@ app gradle에 retrofit을 추가한다. json 형식으로 응답하는 경우 gs
 ```
 
 서버와 통신하기 위해 Manifest에 인터넷 권한을 추가한다. 사용자에게 따로 권한을 요청할 필요는 없다.
+
+<br />
 
 ## POJO 생성
 
@@ -57,6 +65,8 @@ REST API 테스트는 [JsonPlaceHolder](http://jsonplaceholder.typicode.com/) �
 
 위 json 파일은 우리가 테스트 할 url인 http://jsonplaceholder.typicode.com/posts/1 에서 가져온 값이다.
 
+<br />
+
 이를 바탕으로 POJO 클래스를 생성해보자.
 
 ```java
@@ -72,6 +82,8 @@ data class Posts(
 
 직접 만들기가 어려우면 [여기](http://pojo.sodhanalibrary.com/)에서 json 파일만 넣어주면 자바로 POJO 클래스를 만들어준다.
 
+<br />
+
 ## retrofit 생성 및 요청
 
 먼저 baseUrl과 컨버터를 적어 빌드한다.
@@ -82,6 +94,8 @@ val retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 ```
+
+<br />
 
 그리고 아래와 같이 요청하면 콜백으로 응답을 받을 수 있다. 콜백 함수의 안에는 자유롭게 구현하면 된다.
 

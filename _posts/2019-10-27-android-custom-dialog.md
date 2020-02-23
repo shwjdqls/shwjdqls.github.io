@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[안드로이드] 커스텀 다이얼로그(Custom dialog) 만들기 - AlertDialog"
+title: "[Android] 커스텀 다이얼로그(Custom dialog) 만들기 - AlertDialog"
 category: Android
 tags: [Android, Dialog, Custom, AlertDialog]
 comments: true

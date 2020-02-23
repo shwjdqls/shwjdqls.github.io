@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[안드로이드] 풀스크린(Fullscreen) 화면 설정 - Lean back, Immersive, Sticky immersive"
+title: "[Android] 풀스크린(Fullscreen) 화면 설정 - Lean back, Immersive, Sticky immersive"
 category: Android
 tags: [Android, Fullscreen, Lean back, Immersive, Sticky immersive, Status bar, Navigation bar]
 comments: true
