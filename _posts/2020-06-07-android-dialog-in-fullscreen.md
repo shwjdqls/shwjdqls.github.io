@@ -2,7 +2,7 @@
 layout: post
 title: "[Android] 풀스크린으로 다이얼로그 띄우기"
 category: Android
-tags: [Dialog, Fullscreen, Custom, AlertDialog]
+tags: [Android, Dialog, Fullscreen, Custom, AlertDialog]
 comments: true
 ---
 
